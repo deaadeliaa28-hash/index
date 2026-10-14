@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Seru Pancasila - Kelas 2 SD</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #2C3E50;
+            --light: #F7F9F9;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a8ede} 0%, #fed6e3 100%);
+            background-color: #74b9ff;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 90vh;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 5px solid #ff5252;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-stats {
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        /* Navigasi Menu */
+        .navbar {
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--dark);
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            transition: 0.2s;
+            margin: 2px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--secondary);
+            color: var(--dark);
+            font-weight: bold;
+            transform: scale(1.05);
+        }
+
+        /* Konten Utama */
+        .content {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 65vh;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            background: var(--secondary);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #3b9e96;
+            transition: 0.1s;
+            margin: 5px;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #3b9e96;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: #ddd;
+            border-radius: 10px;
+            height: 15px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--success);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Kartu Materi & Simulasi */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .materi-card {
+            background: var(--light);
+            border: 3px solid var(--secondary);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .materi-card:hover {
+            background: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        /* Kotak Game / Aktivitas */
+        .game-box {
+            background: #fff8e7;
+            border: 3px dashed var(--primary);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #e0fbfc;
+        }
+
+        .option-btn.correct {
+            background: var(--success) !important;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .option-btn.wrong {
+            background: var(--danger) !important;
+            color: white;
+            border-color: #c0392b;
+        }
+
+        /* Open the Box Style */
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .mystery-box {
+            background: #ffbe76;
+            border: 3px solid #f0932b;
+            border-radius: 10px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .mystery-box:hover {
+            transform: scale(1.05);
+            background: #ff7979;
+        }
+
+        .mystery-box.opened {
+            background: #dff9fb;
+            border-color: #7ed6df;
+            font-size: 1rem;
+            text-align: center;
+            padding: 5px;
+        }
+
+        /* Feedback Area */
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.success { background: #d4edda; color: #155724; display: block; }
+        .feedback.error { background: #f8d7da; color: #721c24; display: block; }
+
+        /* Badge Grid */
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            filter: grayscale(100%);
+            border: 3px solid #999;
+        }
+
+        .badge.unlocked {
+            background: var(--accent);
+            filter: grayscale(0%);
+            border-color: #f1c40f;
+            animation: bounce 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <span>⭐ Garuda Ceria ⭐</span>
+        <div class="user-stats">Skor: <span id="scoreDisplay">0</span> | Badge: <span id="badgeCount">0</span>/3</div>
+    </header>
+
+    <!-- Navigasi Menu -->
+    <nav class="navbar">
+        <button class="nav-btn active" onclick="switchScreen('beranda')">🏠 Beranda</button>
+        <button class="nav-btn" onclick="switchScreen('materi')">📚 Materi</button>
+        <button class="nav-btn" onclick="switchScreen('simulasi')">🔬 Simulasi</button>
+        <button class="nav-btn" onclick="switchScreen('permainan')">🎮 Permainan</button>
+        <button class="nav-btn" onclick="switchScreen('kuis')">📝 Kuis</button>
+        <button class="nav-btn" onclick="switchScreen('hasil')">🏆 Hasil</button>
+    </nav>
+
+    <div class="content">
+        <!-- 1. BERANDA -->
+        <div id="beranda" class="screen active">
+            <h2>Selamat Datang di Petualangan Pancasila! 🇮🇩</h2>
+            <p>Halo, Teman Pintar! Yuk kita belajar mengenal Garuda Pancasila, sila-sila, simbol, serta nilai-nilainya dengan cara yang seru dan menyenangkan!</p>
+            <div style="text-align: center; margin: 20px 0;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Garuda_Pancasila_Coat_of_Arms.svg" alt="Garuda" style="width: 150px; height: 150px;">
+            </div>
+            <div style="text-align: center;">
+                <button class="btn" onclick="switchScreen('materi')">Mulai Belajar 🚀</button>
+            </div>
+        </div>
+
+        <!-- 2. MATERI -->
+        <div id="materi" class="screen">
+            <h2>📚 Materi Pancasila</h2>
+            <p>Klik tombol di bawah untuk melihat penjelasan singkat tentang setiap Sila Pancasila:</p>
+            <div class="card-grid">
+                <div class="materi-card" onclick="showMateriDetail(1)">
+                    <h3>⭐ Sila ke-1</h3>
+                    <p>Simbol: Bintang</p>
+                </div>
+                <div class="materi-card" onclick="showMateriDetail(2)">
+                    <h3>🔗 Sila ke-2</h3>
+                    <p>Simbol: Rantai</p>
+                </div>
+                <div class="materi-card" onclick="showMateriDetail(3)">
+                    <h3>🌳 Sila ke-3</h3>
+                    <p>Simbol: Pohon Beringin</p>
+                </div>
+                <div class="materi-card" onclick="showMateriDetail(4)">
+                    <h3>🐃 Sila ke-4</h3>
+                    <p>Simbol: Kepala Banteng</p>
+                </div>
+                <div class="materi-card" onclick="showMateriDetail(5)">
+                    <h3>🌾 Sila ke-5</h3>
+                    <p>Simbol: Padi & Kapas</p>
+                </div>
+            </div>
+            <div id="materiDetailBox" class="game-box" style="margin-top: 20px; display: none;">
+                <h3 id="materiTitle">Judul Sila</h3>
+                <p id="materiDesc">Deskripsi akan muncul di sini.</p>
+            </div>
+        </div>
+
+        <!-- 3. SIMULASI -->
+        <div id="simulasi" class="screen">
+            <h2>🔬 Simulasi Sebab-Akibat Gotong Royong</h2>
+            <p>Ubah pilihan situasi di bawah ini untuk melihat bagaimana kerja sama (Sila ke-3 & ke-4) berdampak pada kelas kita!</p>
+            <div class="game-box">
+                <label><strong>Pilih Situasi Kelas:</strong></label>
+                <select id="simulasiSelect" class="option-btn" onchange="runSimulasi()">
+                    <option value="0">-- Pilih Kondisi Kelas --</option>
+                    <option value="1">Piket kelas dikerjakan bersama-sama</option>
+                    <option value="2">Bermain lempar-lemparan sampah di kelas</option>
+                    <option value="3">Bermusyawarah memilih ketua kelas</option>
+                </select>
+                <div id="simulasiResult" style="margin-top: 15px; font-weight: bold; color: var(--primary);"></div>
+            </div>
+        </div>
+
+        <!-- 4. PERMAINAN (Open Box, Drag & Drop alternatif, Menjodohkan, Benar/Salah, Timer) -->
+        <div id="permainan" class="screen">
+            <h2>🎮 Zona Permainan Seru</h2>
+            <div class="progress-container"><div id="gameProgressBar" class="progress-bar"></div></div>
+            
+            <!-- Sub-Aktivitas 1: Open the Box -->
+            <div id="subGame1" class="game-box">
+                <h3>🎁 Aktivitas 1: Open the Box (Simbol Pancasila)</h3>
+                <p>Klik kotak ajaib untuk menemukan simbol-simbol sila!</p>
+                <div class="box-grid">
+                    <div class="mystery-box" onclick="openBox(this, 'Sila 1: Bintang ⭐')">?</div>
+                    <div class="mystery-box" onclick="openBox(this, 'Sila 2: Rantai 🔗')">?</div>
+                    <div class="mystery-box" onclick="openBox(this, 'Sila 3: Beringin 🌳')">?</div>
+                    <div class="mystery-box" onclick="openBox(this, 'Sila 4: Banteng 🐃')">?</div>
+                    <div class="mystery-box" onclick="openBox(this, 'Sila 5: Padi Kapas 🌾')">?</div>
+                    <div class="mystery-box" onclick="openBox(this, 'Garuda: Bhinneka Tunggal Ika 🇮🇩')">?</div>
+                </div>
+                <div id="boxFeedback" class="feedback"></div>
+            </div>
+
+            <!-- Sub-Aktivitas 2: Benar / Salah & Pilihan Ganda Interaktif -->
+            <div id="subGame2" class="game-box">
+                <h3>✨ Aktivitas 2: Kuis Cepat & Tantangan Timer</h3>
+                <p id="timerDisplay" style="color: var(--danger); font-weight: bold;">Sisa Waktu: ⏱️ <span id="timeCount">30</span> detik</p>
+                <p id="questionText">Pertanyaan akan muncul di sini...</p>
+                <div id="optionsContainer"></div>
+                <div id="gameFeedback" class="feedback"></div>
+                <button class="btn" id="nextGameBtn" onclick="nextGameQuestion()" style="display: none; margin-top: 10px;">Lanjut ➡️</button>
+            </div>
+        </div>
+
+        <!-- 5. KUIS UTAMA -->
+        <div id="kuis" class="screen">
+            <h2>📝 Kuis Evaluasi Pancasila</h2>
+            <div class="progress-container"><div id="quizProgressBar" class="progress-bar"></div></div>
+            <div class="game-box">
+                <p id="quizQuestionNum">Soal 1 dari 5</p>
+                <h3 id="quizQuestionText">Pertanyaan Kuis...</h3>
+                <div id="quizOptionsContainer"></div>
+                <div id="quizFeedback" class="feedback"></div>
+                <button class="btn" id="nextQuizBtn" onclick="nextQuizQuestion()" style="display: none; margin-top: 10px;">Soal Berikutnya ➡️</button>
+            </div>
+        </div>
+
+        <!-- 6. HASIL -->
+        <div id="hasil" class="screen" style="text-align: center;">
+            <h2>🏆 Hasil Belajar Kamu</h2>
+            <p>Hebat sekali! Kamu telah menyelesaikan seluruh rangkaian kegiatan Pancasila.</p>
+            <h1 id="finalScoreDisplay" style="color: var(--primary); font-size: 3rem; margin: 15px 0;">0 Poin</h1>
+            <p id="motivationalMessage" style="font-weight: bold; color: var(--success);"></p>
+            
+            <h3>Koleksi Badge Penghargaan:</h3>
+            <div class="badge-container">
+                <div id="badge1" class="badge" title="Pahlawan Bintang">⭐</div>
+                <div id="badge2" class="badge" title="Master Gotong Royong">🤝</div>
+                <div id="badge3" class="badge" title="Bintang Garuda">👑</div>
+            </div>
+            <button class="btn" onclick="resetApp()" style="margin-top: 20px;">Mainkan Lagi 🔄</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global State
+    let score = 0;
+    let badgesUnlocked = 0;
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        event && event.target && event.target.classList.add('active');
+        if(screenId === 'permainan' && !gameStarted) {
+            startTimer();
+            loadGameQuestion();
+        }
+    }
+
+    // Materi Detail
+    const materiData = {
+        1: { title: "Sila ke-1: Ketuhanan Yang Maha Esa", desc: "Simbolnya adalah Bintang. Nilainya adalah rajin beribadah, berdoa sebelum makan/tidur, dan menghormati teman yang berbeda agama." },
+        2: { title: "Sila ke-2: Kemanusiaan yang Adil dan Beradab", desc: "Simbolnya adalah Rantai. Nilainya adalah saling membantu teman yang kesusahan, bersikap sopan, dan tidak membully." },
+        3: { title: "Sila ke-3: Persatuan Indonesia", desc: "Simbolnya adalah Pohon Beringin. Nilainya adalah cinta tanah air, rukun dengan teman, dan bangga memakai produk Indonesia." },
+        4: { title: "Sila ke-4: Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan", desc: "Simbolnya adalah Kepala Banteng. Nilainya adalah bermusyawarah, mendengarkan pendapat teman, dan tidak memaksakan kehendak." },
+        5: { title: "Sila ke-5: Keadilan Sosial bagi Seluruh Rakyat Indonesia", desc: "Simbolnya adalah Padi dan Kapas. Nilainya adalah bersikap adil, suka berbagi, dan bekerja sama merapikan kelas." }
+    };
+
+    function showMateriDetail(silaNum) {
+        const box = document.getElementById('materiDetailBox');
+        document.getElementById('materiTitle').innerText = materiData[silaNum].title;
+        document.getElementById('materiDesc').innerText = materiData[silaNum].desc;
+        box.style.display = 'block';
+    }
+
+    // Simulasi
+    function runSimulasi() {
+        const val = document.getElementById('simulasiSelect').value;
+        const resBox = document.getElementById('simulasiResult');
+        if(val === "1") {
+            resBox.innerHTML = "Akibat: Kelas menjadi bersih, rapi, dan cepat selesai! (Mencerminkan nilai Sila ke-3 dan ke-5). 🎉";
+            addScore(10);
+        } else if(val === "2") {
+            resBox.innerHTML = "Akibat: Kelas kotor, bau, dan membuat piket kesusahan. Ini sikap yang tidak sesuai Pancasila! ❌";
+        } else if(val === "3") {
+            resBox.innerHTML = "Akibat: Semua siswa merasa adil dan senang karena keputusan diambil bersama-sama secara damai (Sila ke-4). 👍";
+            addScore(10);
+        } else {
+            resBox.innerHTML = "";
+        }
+    }
+
+    // Open the Box Game
+    let openedBoxesCount = 0;
+    function openBox(element, text) {
+        if(!element.classList.contains('opened')) {
+            element.classList.add('opened');
+            element.innerHTML = text;
+            openedBoxesCount++;
+            addScore(5);
+            if(openedBoxesCount === 6) {
+                document.getElementById('boxFeedback').className = "feedback success";
+                document.getElementById('boxFeedback').innerText = "Hebat! Semua kotak simbol berhasil dibuka! 🎉";
+                checkBadgeUnlock();
+            }
+        }
+    }
+
+    // Game Timer & Pertanyaan Cepat
+    let gameQuestions = [
+        { q: "Simbol Sila ke-1 Pancasila adalah...", options: ["Bintang", "Rantai", "Pohon Beringin"], answer: 0 },
+        { q: "Membantu teman yang jatuh dari sepeda sesuai Sila ke...", options: ["Sila 1", "Sila 2", "Sila 5"], answer: 1 },
+        { q: "Bermusyawarah memilih ketua kelas dilambangkan dengan...", options: ["Kepala Banteng", "Padi Kapas", "Bintang"], answer: 0 }
+    ];
+    let currentGameIndex = 0;
+    let gameTimer = 30;
+    let timerInterval;
+    let gameStarted = false;
+
+    function startTimer() {
+        if(gameStarted) return;
+        gameStarted = true;
+        timerInterval = setInterval(() => {
+            gameTimer--;
+            document.getElementById('timeCount').innerText = gameTimer;
+            if(gameTimer <= 0) {
+                clearInterval(timerInterval);
+                alert("Waktu habis! Mari kita lanjut ke kuis berikutnya.");
+            }
+        }, 1000);
+    }
+
+    function loadGameQuestion() {
+        if(currentGameIndex >= gameQuestions.length) {
+            document.getElementById('subGame2').innerHTML = "<h3>🎉 Selamat! Tantangan Cepat Selesai!</h3>";
+            return;
+        }
+        let qData = gameQuestions[currentGameIndex];
+        document.getElementById('questionText').innerText = qData.q;
+        let optHtml = "";
+        qData.options.forEach((opt, idx) => {
+            optHtml += `<button class="option-btn" onclick="checkGameAnswer(${idx}, ${qData.answer})">${opt}</button>`;
+        });
+        document.getElementById('optionsContainer').innerHTML = optHtml;
+        document.getElementById('gameFeedback').style.display = 'none';
+        document.getElementById('nextGameBtn').style.display = 'none';
+    }
+
+    function checkGameAnswer(selected, correct) {
+        let fb = document.getElementById('gameFeedback');
+        if(selected === correct) {
+            fb.className = "feedback success";
+            fb.innerText = "Benar sekali! Pintar! ⭐";
+            addScore(10);
+        } else {
+            fb.className = "feedback error";
+            fb.innerText = "Kurang tepat, ayo coba ingat lagi materinya! 💪";
+        }
+        document.getElementById('nextGameBtn').style.display = 'block';
+    }
+
+    function nextGameQuestion() {
+        currentGameIndex++;
+        loadGameQuestion();
+    }
+
+    // Kuis Evaluasi Utama (5 Soal)
+    let quizQuestions = [
+        { q: "Bunyi Sila ke-3 Pancasila adalah...", options: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang Adil dan Beradab", "Persatuan Indonesia"], answer: 2 },
+        { q: "Simbol Padi dan Kapas menunjukkan Sila ke berapa?", options: ["Sila ke-3", "Sila ke-4", "Sila ke-5"], answer: 2 },
+        { q: "Berdoa sebelum belajar di kelas adalah pengamalan Sila ke...", options: ["Sila ke-1", "Sila ke-2", "Sila ke-3"], answer: 0 },
+        { q: "Sikap bergotong royong membersihkan halaman sekolah sesuai dengan nilai Pancasila, khususnya Sila ke...", options: ["Sila ke-2 dan 3", "Sila ke-1", "Sila ke-4"], answer: 0 },
+        { q: "Sebelum mengambil keputusan bersama, sebaiknya kita melakukan...", options: ["Bermusyawarah", "Bertengkar", "Memaksa teman"], answer: 0 }
+    ];
+    let currentQuizIndex = 0;
+    let quizScore = 0;
+
+    function loadQuiz() {
+        if(currentQuizIndex >= quizQuestions.length) {
+            showFinalResults();
+            return;
+        }
+        let q = quizQuestions[currentQuizIndex];
+        document.getElementById('quizQuestionNum').innerText = `Soal ${currentQuizIndex + 1} dari 5`;
+        document.getElementById('quizQuestionText').innerText = q.q;
+        let optHtml = "";
+        q.options.forEach((opt, idx) => {
+            optHtml += `<button class="option-btn" onclick="checkQuizAnswer(${idx}, ${q.answer})">${opt}</button>`;
+        });
+        document.getElementById('quizOptionsContainer').innerHTML = optHtml;
+        document.getElementById('quizFeedback').style.display = 'none';
+        document.getElementById('nextQuizBtn').style.display = 'none';
+        document.getElementById('quizProgressBar').style.width = ((currentQuizIndex / quizQuestions.length) * 100) + '%';
+    }
+
+    function checkQuizAnswer(selected, correct) {
+        let fb = document.getElementById('quizFeedback');
+        if(selected === correct) {
+            fb.className = "feedback success";
+            fb.innerText = "Jawaban Kamu Benar! Hebat! 🌟";
+            quizScore += 20;
+            addScore(15);
+        } else {
+            fb.className = "feedback error";
+            fb.innerText = "Belum tepat. Tetap semangat ya!";
+        }
+        document.getElementById('nextQuizBtn').style.display = 'block';
+    }
+
+    function nextQuizQuestion() {
+        currentQuizIndex++;
+        loadQuiz();
+    }
+
+    // Skor & Badge System
+    function addScore(points) {
+        score += points;
+        document.getElementById('scoreDisplay').innerText = score;
+    }
+
+    function checkBadgeUnlock() {
+        badgesUnlocked = 3;
+        document.getElementById('badgeCount').innerText = badgesUnlocked;
+        document.getElementById('badge1').classList.add('unlocked');
+        document.getElementById('badge2').classList.add('unlocked');
+        document.getElementById('badge3').classList.add('unlocked');
+    }
+
+    function showFinalResults() {
+        switchScreen('hasil');
+        document.getElementById('finalScoreDisplay').innerText = score + " Poin";
+        let msg = "";
+        if(quizScore >= 80) {
+            msg = "Luar biasa! Kamu adalah Anak Pintar Garuda yang sangat paham nilai Pancasila! 🥇";
+            checkBadgeUnlock();
+        } else {
+            msg = "Kerja bagus! Teruslah berlatih dan belajar tentang Pancasila ya! 👍";
+        }
+        document.getElementById('motivationalMessage').innerText = msg;
+    }
+
+    // Reset App
+    function resetApp() {
+        score = 0;
+        currentQuizIndex = 0;
+        quizScore = 0;
+        document.getElementById('scoreDisplay').innerText = score;
+        switchScreen('beranda');
+    }
+
+    // Inisialisasi Kuis saat pertama dimuat
+    loadQuiz();
+</script>
+</body>
+</html>
